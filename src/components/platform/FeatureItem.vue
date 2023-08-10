@@ -9,8 +9,7 @@
     <div class="col-span-2">
       <template v-if="showInput">
         <div class="flex justify-center gap-2">
-          <input type="checkbox" :id="`switch_${label}`" :checked="state" @change="$emit('update')" />
-          <label :for="`switch_${label}`">Toggle</label>
+          <SwitchInput :label="label" :model-value="state" @update:modelValue="handleUpdateUserInput" />
 
           <button class="opacity-30 hover:opacity-100" @click="handleHideInput">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" height="16" width="16"><path d="M6 2l2-2h4l2 2h4v2H2V2h4zM3 6h14l-1 14H4L3 6zm5 2v10h1V8H8zm3 0v10h1V8h-1z" /></svg>
@@ -32,6 +31,7 @@
 <script setup lang="ts">
 import ActiveState from '../ActiveState.vue';
 import { onMounted, ref } from 'vue';
+import SwitchInput from '../ui/SwitchInput.vue';
 
 const props = defineProps<{
   label: string;
@@ -49,6 +49,10 @@ const handleShowInput = () => {
   emit('init');
 };
 
+const handleUpdateUserInput = (newState: boolean) => {
+  emit('update', newState);
+};
+
 const handleHideInput = () => {
   showInput.value = false;
 
@@ -63,45 +67,3 @@ onMounted(() => {
   showInput.value = true;
 });
 </script>
-
-<style scoped lang="scss">
-input[type='checkbox'] {
-  height: 0;
-  width: 0;
-  visibility: hidden;
-}
-
-label {
-  @apply relative block bg-red-500 cursor-pointer rounded-full;
-
-  cursor: pointer;
-  text-indent: -9999px;
-  width: 50px;
-  height: 30px;
-}
-
-label:after {
-  content: '';
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  width: 20px;
-  height: 20px;
-  background: #fff;
-  border-radius: 90px;
-  transition: 0.3s;
-}
-
-input:checked + label {
-  @apply bg-green-500;
-}
-
-input:checked + label:after {
-  left: calc(100% - 5px);
-  transform: translateX(-100%);
-}
-
-label:active:after {
-  width: 30px;
-}
-</style>

@@ -1,6 +1,15 @@
 import { App, createApp } from 'vue';
-import FeaturePluginLayout from './components/layout/FeaturePluginLayout.vue';
-import { FeaturePluginOptions } from '../types/features.types';
+import FeaturePlugin from './components/FeaturePlugin.vue';
+import { Features } from './main';
+
+type FeaturePluginOptions = {
+  visible?: boolean;
+  prefix: string;
+  locale: string;
+  version: string;
+  platform: string;
+  accountFeatures: Features;
+};
 
 const featurePlugin = {
   install: (app: App, options: FeaturePluginOptions) => {
@@ -17,7 +26,7 @@ const featurePlugin = {
 
     document.body.appendChild(featurePluginElement);
 
-    createApp(FeaturePluginLayout, {
+    createApp(FeaturePlugin, {
       accountFeatures: options.accountFeatures,
       locale: options.locale,
       platform: options.platform,

@@ -5,13 +5,13 @@
     <span class="min-h-[30px] justify-center flex items-center font-bold">State</span>
 
     <template v-if="features">
-      <FeaturePluginDashboardFeatureItem
+      <FeatureItem
         v-for="(feature, key) in features"
         :key="key"
         :label="feature.label"
         :state="feature.state"
         :user="feature.user"
-        @update="setLocalState(feature, !feature.state)"
+        @update="(newState) => setLocalState(feature, newState)"
         @init="setLocalState(feature, feature.state)"
         @remove="removeLocalState(feature)"
       />
@@ -21,9 +21,9 @@
 
 <script setup lang="ts">
 import { inject, onBeforeMount, ref } from 'vue';
-import FeaturePluginDashboardFeatureItem from './FeaturePluginDashboardFeatureItem.vue';
-import { injectionKeyFeaturePluginAccountFeatures } from '../../../utils/keys';
-import { flatten } from '../../../utils/flatten';
+import FeatureItem from './FeatureItem.vue';
+import { injectFeaturePluginAccountFeatures } from '../../utils/keys';
+import { flatten } from '../../utils/flatten';
 
 type FormattedFeature = {
   label: string;
@@ -37,7 +37,8 @@ const props = defineProps<{
 
 const features = ref({});
 
-const accountFeatures = flatten(inject(injectionKeyFeaturePluginAccountFeatures, {})) as Record<string, boolean>;
+const accountFeatures = inject(injectFeaturePluginAccountFeatures);
+const flattendAccountFeatures = flatten(accountFeatures);
 
 const localStorageRaw = { ...window.localStorage };
 const localFeatures: Record<string, boolean> = {};
@@ -47,7 +48,7 @@ for (const key in localStorageRaw) {
     continue;
   }
   const featureKey = key.replace('features.', '');
-  const index = Object.keys(accountFeatures).findIndex((key) => featureKey === key);
+  const index = Object.keys(flattendAccountFeatures).findIndex((key) => featureKey === key);
 
   if (!~index) {
     continue;
@@ -59,13 +60,15 @@ for (const key in localStorageRaw) {
 const setFeatures = () => {
   const formattedFeatures: FormattedFeature[] = [];
 
-  for (const [key, value] of Object.entries(accountFeatures)) {
-    const user = Object.keys(localFeatures).includes(key) ? localFeatures[key] : undefined;
-    const state = user !== undefined ? user : value;
+  for (const [key, value] of Object.entries(flattendAccountFeatures)) {
+    const userInput = Object.keys(localFeatures).includes(key) ? localFeatures[key] : undefined;
+    const state = userInput !== undefined ? userInput : value;
+
+    console.log(userInput, value, state);
 
     formattedFeatures.push({
       label: key,
-      user,
+      user: userInput,
       state,
     });
   }
