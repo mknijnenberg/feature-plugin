@@ -82,6 +82,7 @@ export type Features = {
 
 createApp(App)
   .use(featurePlugin, {
+    flag: 'debugMode',
     visible: true,
     prefix: 'features',
     platform: 'myparcelnl',

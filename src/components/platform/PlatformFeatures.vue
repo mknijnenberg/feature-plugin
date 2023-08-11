@@ -62,7 +62,7 @@ for (const key in storageKeys) {
     continue;
   }
 
-  localFeatures[featureKey] = localStorageRaw[key].toLowerCase() === 'true';
+  localFeatures[featureKey] = storageKeys[key].toLowerCase() === 'true';
 }
 
 const setFeatures = () => {

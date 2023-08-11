@@ -3,12 +3,13 @@ import FeaturePlugin from './components/FeaturePlugin.vue';
 import { Features } from './main';
 
 type FeaturePluginOptions = {
-  visible?: boolean;
-  prefix: string;
-  locale: string;
-  version: string;
-  platform: string;
   accountFeatures: Features;
+  flag: string;
+  locale: string;
+  platform: string;
+  prefix: string;
+  version: string;
+  visible?: boolean;
 };
 
 const featurePlugin = {
@@ -17,6 +18,10 @@ const featurePlugin = {
 
     if (!visible) {
       console.warn('Feature plugin is disabled');
+      return;
+    }
+
+    if (window.localStorage.getItem(options.flag) !== 'true') {
       return;
     }
 
@@ -32,6 +37,7 @@ const featurePlugin = {
       platform: options.platform,
       prefix: options.prefix,
       version: options.version,
+      visible: options.visible,
     }).mount(featurePluginElement);
   },
 };

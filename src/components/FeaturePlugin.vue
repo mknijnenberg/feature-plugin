@@ -20,15 +20,16 @@ import { Features } from '../main';
 
 const props = defineProps<{
   accountFeatures: Features;
-  prefix: string;
-  platform: string;
-  version: string;
   locale: string;
+  platform: string;
+  prefix: string;
+  version: string;
+  visible: boolean;
 }>();
 
 provide(injectFeaturePluginAccountFeatures, props.accountFeatures);
 
-const showDashboard = ref(true);
+const showDashboard = ref(false);
 
 const toggleDashboard = () => {
   showDashboard.value = !showDashboard.value;
