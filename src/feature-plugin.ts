@@ -1,4 +1,4 @@
-import { App, createApp } from 'vue';
+import { createApp } from 'vue';
 import FeaturePlugin from './components/FeaturePlugin.vue';
 import { Features } from './main';
 
@@ -12,7 +12,7 @@ type FeaturePluginOptions = {
 };
 
 const featurePlugin = {
-  install: (app: App, options: FeaturePluginOptions) => {
+  install: (_, options: FeaturePluginOptions) => {
     const { visible = false } = options;
 
     if (!visible) {
