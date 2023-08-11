@@ -40,10 +40,18 @@ const features = ref({});
 const accountFeatures = inject(injectFeaturePluginAccountFeatures);
 const flattendAccountFeatures = flatten(accountFeatures);
 
-const localStorageRaw = { ...window.localStorage };
+const storageKeys: string[] = [];
+for (let i = 0; i < localStorage.length; i++) {
+  const key = localStorage.key(i);
+
+  if (key) {
+    storageKeys.push(key);
+  }
+}
+
 const localFeatures: Record<string, boolean> = {};
 
-for (const key in localStorageRaw) {
+for (const key in storageKeys) {
   if (!key.startsWith('features.')) {
     continue;
   }
